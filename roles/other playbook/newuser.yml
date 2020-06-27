@@ -1,0 +1,18 @@
+-
+  name: 'create new user'
+  hosts: target
+  become: yes
+  tasks:
+
+    - name: 'add user'
+      user:
+        name: ansible
+        comment: ansible user
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+
+
+    - copy:
+        content: "ansible ALL=(ALL)   NOPASSWD:ALL"
+        dest: "/etc/sudoers.d/ansible"

@@ -1,0 +1,48 @@
+- hosts: awx
+  become: true
+  vars_prompt:
+    - name: "raw_disks"
+      prompt: "Raw disk used for create a Physical Volume"
+      private: no
+
+    - name: "vg_name"
+      prompt: "Name of the Volume Group"
+      private: no
+
+  vars:
+    lvm_apply: true
+    lvm_groups:
+      - vgname: "{{ vg_name }}"
+        disks: "{{ raw_disks }}"
+        create: true
+        lvnames:
+          - lvname: lv.poy.was85
+            size: 150m
+            create: true
+            filesystem: ext4
+            mount: true
+            mount_point: /poy/was85
+            mount_options: 'defaults,noatime'
+          - lvname: lv.poy.was85.was
+            size: 90m
+            create: true
+            filesystem: ext4
+            mount: true
+            mount_point: /poy/was85/was
+            mount_options: 'defaults,noatime'
+      # VG whitout LV
+      - vgname: "{{ vg_name }}"
+        disks: "{{ raw_disks }}"
+        create: true
+        lvnames: []
+
+  roles:
+     - lvm_management
+
+  post_tasks:
+    - name: COMMAND | lvdisplay
+      command: lvdisplay
+      changed_when: false
+    - name: COMMAND | vgdisplay
+      command: vgdisplay
+      changed_when: false

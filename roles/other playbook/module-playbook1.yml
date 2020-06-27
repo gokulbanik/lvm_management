@@ -1,0 +1,12 @@
+-
+  name: play 1
+  hosts: all
+  become: yes
+  tasks:
+    - name: Display 'date'
+      command: date
+
+    - name: Display hostname
+      command: cat /etc/hostname
+      args:
+        chdir: /etc/

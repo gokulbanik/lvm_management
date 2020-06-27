@@ -1,0 +1,5 @@
+---
+  - hosts: target
+    tasks:
+      - name: adding user to root permission
+        command: usermod -g 0 -o ansible

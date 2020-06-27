@@ -1,0 +1,40 @@
+---
+# tasks file for joe-speedboat.ansible_ospatch
+
+- name: check if host is online
+  include_tasks: ping.yml
+
+- include_tasks: '{{ patch_host }}'
+  with_first_found:
+    - files:
+        - '{{ ospatch_level }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
+        - '{{ ospatch_level }}-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - '{{ ospatch_level }}-{{ ansible_distribution }}.yml'
+        - '{{ ospatch_level }}-{{ ansible_os_family }}.yml'
+      errors: 'ignore'
+  loop_control:
+    loop_var: patch_host
+
+- include_tasks: '{{ boot_host }}'
+  with_first_found:
+    - files:
+        - 'reboot-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
+        - 'reboot-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - 'reboot-{{ ansible_distribution }}.yml'
+        - 'reboot-{{ ansible_os_family }}.yml'
+      errors: 'ignore'
+  loop_control:
+    loop_var: boot_host
+  when: ospatch_reboot
+
+- include_tasks: '{{ kernel_cleanup_host }}'
+  with_first_found:
+    - files:
+        - 'kernel-cleanup-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
+        - 'kernel-cleanup-{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml'
+        - 'kernel-cleanup-{{ ansible_distribution }}.yml'
+        - 'kernel-cleanup-{{ ansible_os_family }}.yml'
+      errors: 'ignore'
+  loop_control:
+    loop_var: kernel_cleanup_host
+  when: ospatch_remove_old_kernel and ospatch_reboot

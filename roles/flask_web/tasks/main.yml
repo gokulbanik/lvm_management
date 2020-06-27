@@ -1,0 +1,12 @@
+
+    - name: "Install Python Flask dependices"
+      pip:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - flask
+        - flask-mysql
+    - name: "copy code"
+      copy: src=app.py dest=/opt/app.py
+    - name: "start seb server"
+      shell: FLASK_APP=app.py nohup flask run --host=0.0.0.0 &

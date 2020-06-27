@@ -1,0 +1,29 @@
+-
+  hosts: lamp_web
+  vars:
+    db_name: "employee_db"
+    db_user: "db_user"
+    db_password: "Passw0rd"
+  tasks:
+    - name: Install all required dependencies
+      yum: name='{{ item }}' state=latest
+      with_items:
+        - epel-release
+        - python
+
+    - name: 'mysql repository'
+      get_url:
+        url: http://repo.mysql.com/mysql-community-release-el7-7.noarch.rpm
+        dest: /tmp
+
+    - name: Install MySQL Community Repo
+      command: /usr/bin/rpm -ivh /tmp/mysql-community-release-el7-7.noarch.rpm
+
+    - name: Install and Configure Database
+      yum: name=* state=latest
+
+    - name: Install and Configure Database
+      yum: name={{ item }} state=present
+      with_items:
+        - mysql-server
+        - mysql-client

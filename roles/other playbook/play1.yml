@@ -1,0 +1,27 @@
+-
+  name: ping test
+  hosts: currentsetup
+  become: yes
+  tasks:
+    - name: 'ping test'
+      ping:
+-
+  name: 'service jobs in client1'
+  hosts: client1
+  tasks:
+    - name: 'stop firewall service'
+      command: 'systemctl stop firewalld'
+
+    - name: 'Start firewall service'
+      service:
+            name: firewalld
+            state: started
+      delay: 5
+
+-
+  name: ping test
+  hosts: currentsetup
+  tasks:
+    - name: 'ping test'
+      delay: 20
+      ping:

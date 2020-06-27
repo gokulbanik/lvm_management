@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Chris Ruettimann
+  company: Bitbull Community
+  description: Patch various OS flavoures
+  min_ansible_version: 2.4
+  license: GPLv3
+  platforms:
+  - name: EL
+    versions:
+    - 7
+    - 6
+  - name: Fedora
+  - name: Ubuntu
+  galaxy_tags:
+  - system
+  - patching
+  - sysadmin
+
+dependencies: []
